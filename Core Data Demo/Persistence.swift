@@ -14,8 +14,8 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let newItem = Person(context: viewContext)
+            newItem.name = "Sam"
         }
         do {
             try viewContext.save()
@@ -29,8 +29,8 @@ struct PersistenceController {
     }()
 
     let container: NSPersistentContainer
-
-    init(inMemory: Bool = false) {
+// Adding private foreces every one to use the.shared method
+    private init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "Core_Data_Demo")
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
