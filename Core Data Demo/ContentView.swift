@@ -20,8 +20,10 @@ struct ContentView: View {
 //    @FetchRequest(sortDescriptors: [NSSortDescriptor(key: "age", ascending: true)],
 //                  predicate: NSPredicate(format: "name contains[c] 'joe'") ) var people: FetchedResults<Person>
     
-    @State var people = [Person]()
-    @State var filterByText = ""
+//    @State var people = [Person]()
+//    @State var filterByText = ""
+    
+    @FetchRequest(sortDescriptors: []) var families: FetchedResults<Family>
     
     var body: some View {
         
@@ -29,39 +31,37 @@ struct ContentView: View {
         Button(action: addItem) {
                                 Label("Add Item", systemImage: "plus")
                             }
-            TextField("Filter Text", text: $filterByText)
+//            TextField("Filter Text", text: $filterByText)
+//
+//            // Fetch by using enter
+////            { _ in
+//                // Fetch new data
+////                fetchData()
+//       //     }
+//        .border(Color.black, width:  1)
+//                .padding()
+//
+//
             
-            // Fetch by using enter
-//            { _ in
-                // Fetch new data
-//                fetchData()
-       //     }
-        .border(Color.black, width:  1)
-                .padding()
-           
+            List { ForEach(families) { family in
                 
-            
-            List { ForEach(people) { person in
-                
-                Text("\(person.name ?? "No Name"), age: \(person.age ?? " No Age" )")
-                    .onTapGesture {
-                        // For changing
-                        person.name = "Joe"
-                      try! viewContext.save()
-                        
-                        // For deleting
+                Text("\(family.name ?? ""), member count: \(family.members?.count ?? 0 )")
+//                    .onTapGesture {
+//                        // For changing
+//                        person.name = "Joe"
+//                      try! viewContext.save()
+//
+//                        // For deleting
 //                        viewContext.delete(person)
 //                        try! viewContext.save()
                         
                     }
             }
-                
-                
             }
         }
-        .onChange(of: filterByText, perform: { value in
-            fetchData()
-        })
+//        .onChange(of: filterByText, perform: { value in
+//            fetchData()
+//        })
         
         
 //        NavigationView {
@@ -87,37 +87,66 @@ struct ContentView: View {
 //            }
 //            Text("Select an item")
 //        }
-    }
+//    }
     
-    func fetchData() {
-        
-        
-         // Create etch request
-        let request = Person.fetchRequest()
-        // Set sort descriptors and predicates
-        request.sortDescriptors = [NSSortDescriptor(key: "age", ascending: true)]
-        request.predicate = NSPredicate(format: "name contains %@", filterByText)
-        // Execute the fetch
-        
-        DispatchQueue.main.async {
-            do {
-            let results = try viewContext.fetch(request)
-                // Update the state property
-                self.people  = results
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-       
-    }
+//    func sampleCode() {
+//
+//        let f = Family(context: viewContext)
+//
+//        f.name = "Collins Family"
+//
+//        let p = Person(context: viewContext)
+//
+////        p.family = f
+//
+//        f.addToMembers(p)
+//
+//        // Save
+//        try! viewContext.save()
+//
+//    }
+    
+    
+//
+//    func fetchData() {
+//
+//
+//         // Create etch request
+//        let request = Family.fetchRequest()
+//        // Set sort descriptors and predicates
+////        request.sortDescriptors = [NSSortDescriptor(key: "age", ascending: true)]
+////        request.predicate = NSPredicate(format: "name contains %@", filterByText)
+//        // Execute the fetch
+//
+//        DispatchQueue.main.async {
+//            do {
+//            let results = try viewContext.fetch(request)
+//                // Update the state property
+//                self.people  = results
+//            } catch {
+//                print(error.localizedDescription)
+//            }
+//        }
+//
+//    }
 
     private func addItem() {
         
-        let p = Person(context: viewContext)
+        let family = Family(context:viewContext)
+        family.name = String("Family #\(Int.random(in:0...20))")
         
-        p.age = String(Int.random(in: 0...20))
-        p.name = "Tom"
+        let numberOfMembers = Int.random(in:0...5)
         
+        for _ in 0...numberOfMembers {
+            let p = Person(context: viewContext)
+            p.age = String(Int.random(in: 0...20))
+            p.name = "Tom"
+            p.family = family
+        }
+//        let p = Person(context: viewContext)
+//        p.age = String(Int.random(in: 0...20))
+//        p.name = "Tom"
+//
         do {
         try viewContext.save()
         } catch {

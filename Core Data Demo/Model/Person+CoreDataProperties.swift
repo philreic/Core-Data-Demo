@@ -2,7 +2,7 @@
 //  Person+CoreDataProperties.swift
 //  Core Data Demo
 //
-//  Created by Philippe Reichen on 12/8/21.
+//  Created by Philippe Reichen on 12/10/21.
 //
 //
 
@@ -20,6 +20,7 @@ extension Person {
     @NSManaged public var array: [String]?
     @NSManaged public var gender: String?
     @NSManaged public var name: String?
+    @NSManaged public var family: Family?
 
 }
 
